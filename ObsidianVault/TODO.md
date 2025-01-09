@@ -1,0 +1,32 @@
+
+
+- Autograde:
+	- use Github lassroom
+	- Use something like systemd-run with sandboxing to compile code 
+	- deny network access 
+	- set build timeout
+	- then just do input output matching?
+	- Could also use qiling 
+	- could also run in gdb and get exception trace
+	- docker for building 
+		- then use something like qiling, qemu user or something else to test
+		- 
+- Student Lab
+- aarch64 basics 
+- lectures
+- 3 reverse engineering  homework
+	- bind shell
+	- reverse shell
+	- ping/icmp4 shell 
+		- https://github.com/bdamele/icmpsh
+	- dns shell https://github.com/iagox86/dnscat2
+	- featured backdoor 
+	-  Shell with lua interreter
+- Programing
+	- Process creation
+	- linking and loading
+	- IO redirection 
+	- File IO
+	- Network IO
+	- Thread creation
+	- Executable parsing 
