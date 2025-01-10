@@ -30,7 +30,7 @@ For this homework, you should not have to modify the Makefile at all, with the e
 Note that this will be autograded using an emulator and x86_64-linux-gcc. 
 When you are satisfied with your submission, please run `make bundle` to create a tar.gz archive. 
 
-to nuild a specific binary with src file ./src/foo.c. run make foo
+to build a specific binary with src file ./src/foo.c. run make foo
 ### Question 1
 
 **Activation**
