@@ -16,11 +16,7 @@ If you are unfamiliar with GNU make files, please read the the documentation her
 - This homework assignment is all about reviewing C.  
 - Many of you who have programmed with c in the past likely did so in a POSIX/Linux environment. 
 - Linux makes use of LibC as the runtime environment. LibC  implements functions such as `printf`, `malloc`, `free`, `memcpy`...etc.
-- Windows in the past has implemented many of these functions as part of it's POSIX subsystem. 
-- However, after Windows XP, the POSIX subsystem was dropped, and was eventually replaced with what is now the Windows Subsystem for Linux.
-- Many of the POSIX c functions are still supported in the Microsoft Visual C Runtime. 
-- That said, some functions, such as `opendir` defined in `dirent.h` are only implemented in the Minimal GNU C Compiler on Windows (mingw)  c runtime.  
-	- In other words, if you try to import `dirent.h` when using `cl.exe` (Microsoft's C compiler) the compiler will yell at you :-)
+
 
 
 
@@ -31,7 +27,7 @@ Question 6 is meant to be difficult but doable. It is something you might see in
 Please complete the coding questions as described below. You can find the starter code, and Makefile in the HW1 directory in assignments. 
 
 For this homework, you should not have to modify the Makefile at all, with the exception of the CC (C Compiler) variable depending on your arch.  Note that this will be autograded using Wine and x86_64-w64-mingw32-gcc-win32. 
-When you are satisfied with your submission, please run `make submission` to create a zip archive. 
+When you are satisfied with your submission, please run `make bundle` to create a tar.gz archive. 
 
 ### Question 1
 
