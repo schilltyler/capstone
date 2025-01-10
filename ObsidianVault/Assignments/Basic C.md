@@ -26,9 +26,11 @@ Question 6 is meant to be difficult but doable. It is something you might see in
 ### General Directions
 Please complete the coding questions as described below. You can find the starter code, and Makefile in the HW1 directory in assignments. 
 
-For this homework, you should not have to modify the Makefile at all, with the exception of the CC (C Compiler) variable depending on your arch.  Note that this will be autograded using Wine and x86_64-w64-mingw32-gcc-win32. 
+For this homework, you should not have to modify the Makefile at all, with the exception of the CC (C Compiler) variable depending on your arch.  
+Note that this will be autograded using an emulator and x86_64-linux-gcc. 
 When you are satisfied with your submission, please run `make bundle` to create a tar.gz archive. 
 
+to nuild a specific binary with src file ./src/foo.c. run make foo
 ### Question 1
 
 **Activation**
