@@ -120,9 +120,8 @@ Here, an ASCII string is any contiguous array of bytes  with minimum byte value 
 For example, the c string "hello!" is actually an array of chars `char hello[] = {104, 101, 108, 108, 111, 33, 0};` with hex values `0x68 0x65 0x6c 0x6c 0x6f 0x21 0x00`
 
 Your job is to load the entire file into memory,  and scan it for ASCII strings.
-You may assume the maximum file size is 4,294,967,295  bytes (maximum DWORD size.)
-To accomplish this, 
-- Step 1) Calculate the size of the file. You may use the POSIX c API to seek to the end of the file,  or the Windows API  to calculate the file size.
+You may assume the maximum file size is 1GB
+- Step 1) Calculate the size of the file. You may use the POSIX c API to seek to the end of the file, to calculate the file size.
 - Step 2) Read the entire file into a buffer on the Heap. Use `char* buffer = (char*) malloc(file_size)` to allocate enough space for the full file and read the bytes into the buffer.
 - step 3) Search the buffer for all ASCII strings  that are at least 4 characters long! Here, is a character is any value in the ASCII range.  For a refresher ASCII, see https://www.w3schools.com/charsets/ref_html_ascii.asp
 	-	Recall you can use python to check encoding of specific characters:
