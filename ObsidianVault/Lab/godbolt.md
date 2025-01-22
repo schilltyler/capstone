@@ -22,6 +22,22 @@ In this lab, you will implement several basic functions in C, analyze their asse
 
 ---
 
+## Step 0:
+
+Getting started: identifying Syscal Numbers.  Use the following program to find  the relevent syscall numbers. Note that  on the Pi`/usr/include/linux/unistd.h ` is where `<linux/unistd.h>` is implemented
+
+```c
+#include <stdio.h>
+#include <linux/unistd.h> // Include syscall numbers
+//#include <sys/syscall.h>  // Include syscall function declaration
+
+int main() {
+    printf("SYS_read: %d\n", __NR_read);
+    return 0;
+}
+```
+write a bash/python script that takes a syscall name such as read and prints out the syscall number
+
 ## Step 1: Function Implementation
 ### Functions to Implement
 1. **`sum(a, b)`**: Computes the sum of two integers.
@@ -137,7 +153,7 @@ int main() {
 
 ## Submission
 
-- hold onto your code  for next week :)
+- hold onto your code  for next week :) x2
 ---
 
 ## Notes
