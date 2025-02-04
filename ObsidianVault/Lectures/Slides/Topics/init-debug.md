@@ -1,12 +1,3 @@
----
-theme: night
-height: 540
-margin: 0
-maxScale: 4
-slideNumber: true
----
-
-<!-- slide bg="[[Green Logo.svg]]" background-size="auto" -->
 
 ---
 
@@ -43,7 +34,7 @@ Introduction to Malware, Threat Hunting & Offensive Capabilities Development (Li
 
 ::: right
 
-![[Pasted image 20250129132500.png|300]]
+![[wait-for-c2.png|300]]
 
 :::
 
@@ -140,7 +131,7 @@ Most **Linux** malware is userland, so GDB is typically enough to start with.
 :::
 
 ::: right
-![[Pasted image 20250129133133.png]]
+![[gdb-old.png]]
 :::
 
 ---
@@ -176,7 +167,7 @@ Most **Linux** malware is userland, so GDB is typically enough to start with.
 
 ::: right
 
-![[Pasted image 20250129135743.png]]
+![[gru-debug.png]]
 
 :::
 
@@ -286,7 +277,7 @@ Local exec file:
 - This is super handy if malware tries to do something silly like sleep forever.
 :::
 ::: right
-![[Pasted image 20250129141013.png|250]]
+![[gdb-clock.png|250]]
 :::
 ---
 <!-- slide template="[[Base Slide]]" -->
@@ -318,7 +309,7 @@ Local exec file:
 - ghidra --> (make sur eto relocate)
 :::
 ::: right
-![[Pasted image 20250129141258.png|350]]
+![[gdb-meme.png|350]]
 :::
 
 ---
@@ -440,7 +431,7 @@ Local exec file:
 :::
 
 ::: right
-![[Pasted image 20250129144138.png|300]]
+![[kafka.png|300]]
 :::
 
 ---

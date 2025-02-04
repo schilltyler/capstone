@@ -12,6 +12,18 @@ Regardless of whether you are analyzing Linux or Windows malware:
 ## 2. High-Level Overview
 
 We will deploy two Linux virtual machines via **KVM + libvirt**:
+on the pi, please run 
+```
+sudo apt-get install -y \
+	virt-manager \
+	cpu-checker \
+	qemu-utils \
+	qemu-kvm \ 
+	libvirt-daemon-system \
+	
+
+
+```
 
 1. **Dirty VM** hostname `jail`
     - A minimal Linux OS (Ubuntu, Debian, or any distro of choice).
@@ -28,37 +40,18 @@ We will deploy two Linux virtual machines via **KVM + libvirt**:
     - Forwards traffic from Dirty to the internet (if desired) and can simulate local services (DNS, HTTP, etc.) using something like **inetsim**.
 
 ### Network Diagram
-(note actual interface names might be differnt)
-```
-[Host/Raspberry Pi]
-        |
-        | (KVM + libvirt)
-        |
-     +----------+
-     | Gateway  |  <-- (VM #1)
-     |  eth0: NAT or Bridge -> Internet
-     |  eth1: Private -> 10.10.10.2/24
-     +----------+
-          ^
-          | (Private Network: 10.10.10.0/24)
-          |
-     +----------+
-     |  Dirty   |  <-- (VM #2)
-     |  eth0: Private -> 10.10.10.3/24
-     +----------+
-```
-
----
+![[MalwareLab.excalidraw.dark.svg]]
 
 ## 3. KVM + libvirt on Your Host (e.g., Raspberry Pi)
 
 Before provisioning anything, ensure that:
 
 1. **KVM + libvirt** are installed, and your user is in the `libvirt` (and possibly `kvm`) group.
+	1. check this with `kvm-ok` and `systemctl status libvirtd.service`
 2. You have **enough CPU / RAM** resources on your Pi to run at least two simultaneous VMs.
 3. You have a **libvirt network** configured for NAT or bridging.
     - If bridging, set up a Linux bridge device on the Pi that can talk to your LAN or external interface.
-    - If NAT, libvirt can automatically manage NAT via `virbr0`.
+    - If NAT, libvirt can automatically manage NAT via `virbr0`. For simplicity, NAT is recommended 
 
 On an ubuntu/raspbery pios run
 ```
@@ -85,6 +78,7 @@ We want:
     - No outside connectivity, purely an internal LAN (e.g., `10.10.10.0/24`).
 2. **NAT or bridged network** (for Gateway):
     - So that Gateway can optionally reach the open internet.
+    - `10.10.9.9`
 
 ### Example: Defining a Private Network
 
@@ -133,14 +127,29 @@ $ ip a
 ```
 (Replace names/addresses as desired.)
 
-### Example: Using the Default NAT
+### Example:  NAT
 
-Most libvirt installs come with a default NAT network (`default`), typically `192.168.122.0/24`. You can use that for the Gateway’s external NIC, or you can create a bridged network if you prefer direct LAN access.
+Most libvirt installs come with a default NAT network (`default`), typically `192.168.122.0/24`. You can use that for the Gateway’s external NIC, or you  define your own to ensure it doesn't conflict with other interfaces and configure a static IP for the gateway
+```
+<network>
+  <name>nat-net</name>
+  <forward mode="nat"/>
+  <bridge name="virbr2" stp="on" delay="0"/>
+  <ip address="10.10.9.1" netmask="255.255.255.0">
+    <dhcp>
+      <range start="10.10.9.5" end="10.10.9.200"/>
+    </dhcp>
+  </ip>
+</network>
+
+```
+
+Repeat the same steps as above to define, and activate the network.
 
 ---
 
 ## 5. VM Installation: Gateway
-we make use of cloud init images to allow for easy configuration of of newly created machines. For more on cloud init, see https://cloud-init.io/. All you need to know for this tutorial is the configuration for each machine is stored in yaml files.
+We make use of cloud init images to allow for easy configuration of of newly created machines. For more on cloud init, see https://cloud-init.io/. All you need to know for this tutorial is the configuration for each machine is stored in yaml files.
 https://github.com/Ch0nkyLTD/aarch64-linux-lab/tree/main/lab/jail
 https://github.com/Ch0nkyLTD/aarch64-linux-lab/tree/main/lab/gateway
 see `setup.sh` and `*_iso.sh`
@@ -286,7 +295,7 @@ virt-install \
     
     ```bash
     virt-install \
-      --name dirty \
+      --name jail \
       --memory 1024 \
       --vcpus 1 \
       --disk size=10,path=/var/lib/libvirt/images/dirty.qcow2 \
@@ -414,6 +423,14 @@ I recommend leaving it detached and relying on bridging from `gateway`.
 2. **Start** the Dirty VM `jail` and confirm it can only talk to the Gateway (`ping 10.10.10.10`), not the outside world.
 3. If you want to allow the Dirty VM to reach the web, turn on MASQUERADE in iptables (on the Gateway). Use the helper script to do this.
 4. finally, download the test implant and run it with  tshark on gateway with `jail` disconnected from the internet. 
+5. Take snapshots/revert to snapshots where appropriate
+	1. Usually you only need to snapshot the `jail` instance but it also isn't a bad idea to snapshot `gateway`
+![[detonate-workflow.excalidraw.dark.svg]]
+
+
+Please carefully read the directions listed here: https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/configuring_and_managing_virtualization/creating-virtual-machine-snapshots_configuring-and-managing-virtualization#creating-virtual-machine-snapshots-entering-metadata-on-the-command-line_creating-virtual-machine-snapshots
+
+
 
 ---
 
@@ -482,4 +499,4 @@ drwx------ 1 user fuse 4.0K Jan 29 12:09 .ssh
 
 By combining **KVM + libvirt** with **Ansible** provisioning, you can create a reliable **two-VM malware lab** for **Linux-based** analysis. The “Gateway” routes, inspects, or simulates services, while the “Dirty” VM is isolated on a private network. Traffic bridging is easily configured via scripts (or netplan), letting you choose whether malware can reach the outside world or remain captive to your analysis environment.
 
-Use snapshots, maintain strict isolation, and proceed with caution whenever detonating unknown code. Good luck, and happy (safe) hacking!
+Use snapshots, maintain strict isolation, and proceed with caution whenever detonating unknown code. Good luck, and happy hacking!
