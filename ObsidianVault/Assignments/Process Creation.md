@@ -1,4 +1,12 @@
-
+---
+title: Process Creation
+release: 2024-02-10
+due: 2025-02-24
+tags:
+  - release
+  - due
+ctf: NA
+---
 # Homework: Process Creation and IO Redirection (aarch64)
 
 **Note:** This assignment is designed for the **aarch64** architecture. You should test your code using a proper aarch64 environment or an emulator (e.g., using `qemu-aarch64 -L /usr/aarch64-linux-gnu/ ...` as shown in the sample commands).

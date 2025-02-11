@@ -1,3 +1,12 @@
+---
+title: Dynamic Resolution
+release: 2024-02-10
+due: 2025-02-24
+tags:
+  - release
+  - due
+ctf: NA
+---
 # Dynamic Symbol Resolution and ELF  internals
 
 This assignment is divided into several parts that will guide you through exploring dynamic linking, and parsing ELF files. You will implement several utilities and programs that resolve symbols at runtime and print debugging information about ELF binaries.
