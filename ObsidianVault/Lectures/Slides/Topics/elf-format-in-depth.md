@@ -7,7 +7,7 @@
 <!-- slide template="[[Title Slide]]" -->
 # `man elf`
 
-![[Pasted image 20250205120818.png]]
+![[manly-elf.png]]
 
 ---
 <!-- slide template="[[Base Slide]]" -->
@@ -638,7 +638,7 @@ p_flags
 :::
 
 ::: right
-![[Pasted image 20250205125925.png]]
+![[man-elf.png]]
 :::
 
 ---
@@ -765,7 +765,7 @@ Program Headers:
 
 :::
 
-![[Pasted image 20250205122214.png]]
+![[readlelf-l.png]]
 
 
 

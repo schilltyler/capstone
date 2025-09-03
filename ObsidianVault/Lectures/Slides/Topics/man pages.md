@@ -18,7 +18,7 @@
 :::
 
 ::: right 
-![[man-elf.png]])
+![[Imgs/man-elf.png]])
 
 :::
 

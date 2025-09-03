@@ -313,14 +313,4 @@ Combine reading and writing into a single program that copies a file, using only
 2. Copy a small text file -> verify contents are identical.
 3. Copy a large file -> verify correct copy (checksum or compare).
 
----
 
-## Further Notes and Recommendations
-
-- **Compilation**: Remind students to compile with `-Wall -Wextra -pedantic` (or similar) to catch common mistakes.
-- **Memory Checking**: Encourage usage of tools like **Valgrind** to detect leaks and invalid memory accesses.
-- **Edge Cases**: For each exercise, students should explicitly consider and test boundary and error conditions.
-
-These 10 practice problems should help your students master core C concepts including pointer arithmetic, dynamic memory allocation, stack vs. heap usage, structs, and fundamental POSIX file operations. Adjust problem complexity as needed to match the level of your class.
-
-Good luck with your lab!

@@ -244,7 +244,6 @@
 
 
 ---
-
 <!-- slide template="[[Base Slide]]" -->
 ::: title
 #### Channel: Config Modification

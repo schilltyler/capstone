@@ -617,7 +617,7 @@ Creates a duplicate of the calling process.
 :::
 ::: right
 
-![[Pasted image 20250129131645.png]]
+![[os-mem-lie.png]]
 :::
 ---
 <!-- slide template="[[Base Slide]]" -->
