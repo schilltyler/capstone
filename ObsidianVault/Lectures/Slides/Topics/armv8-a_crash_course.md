@@ -25,11 +25,11 @@
 #### ARM Holdings
 
 :::
-  - A British semiconductor and software company.
+  - A British(?) semiconductor and software company.
   - Specializes in designing RISC  architectures.
   - Does not manufacture its own chips.
   - Licenses its designs to other companies (e.g., Qualcomm, Apple, Samsung).
-  - ARM chips power billions of devices, from smartphones to IoT devices to ssd controllers to Enterprise servers.
+  - ARM chips power billions of devices, from smartphones to IoT devices to ssd controllers to enterprise servers.
   - Majority owned by Soft Bank (questionable call by the UK)
 
 
@@ -52,7 +52,7 @@
 | **Performance**      | Optimized for pipelining     | Slower due to complexity    |
 | **Program Size**     | Larger                       | Smaller                     |
 | **Examples**         | ARM, RISC-V                  | x86, Intel 8086             |
-
+(Note x86 is kind of like a sugared RISC at this point)
 
 
 ---
@@ -119,7 +119,7 @@
 
 - `aarch64`: 64 bit execution state  for ARMV8-a
 - `A64` Assembly language/instruction set for `aarch64`
--  32-bit assembly  instructions
+-  32-bit assembly  instructions (4 byte word)
 - Uses 31  64 bit general-purpose registers: `x0`–`x30`, plus `sp` (stack pointer) and `pc` (program counter).
 	- `w0-w30` are the lower 32 bits $b_0,...,b_{31}$
 - Uses 31  128 bit floating point registers `q0-q31`
@@ -181,9 +181,9 @@
 #### A64 vs x86_64 notes 
 
 :::
-- Aarch64 cannot directly operate on data unless it is stored in a register. 
 - Fixed-length 32-bit instructions simplify decoding and pipelining.
-- Implements a **load/store architecture**, meaning it cannot perform operations directly on memory. 
+- Implements a **load/store architecture**, meaning it cannot perform operations directly on memory.
+		- Aarch64 cannot directly operate on data unless it is stored in a register. 
 - All data must first be loaded into registers for processing and then stored back into memory. 
 	- For example, in `memcpy`, data is copied in chunks by loading blocks into registers and then storing them to the destination address.
 
@@ -200,11 +200,14 @@
 - `xzr`: zero register. ignores writes. 
 - `sp`: stack pointer
 - `pc`: instruction pointer/program counter. Can't directly read/modify  like $x_i$
+	- `bracnh`: used to modify `pc`
 - `lr`: alias for `x30`. 
 	- There is no `call` instruction.
 	- There is no `ret` instruction 
 - various system registers ( exception levels, mmu ...etc)
 - this is more trivia than anything but "`x31`" is  either zero register or stack pointer
+	- `sp` and `xzr`/`wzr` are **architecturally distinct**. 
+	- in _some instruction encodings_ the same field in the instruction word can represent either `sp` or `xzr` depending on context.
 
 
 
@@ -450,3 +453,4 @@ str w0, [x1, #-8]! // x1 -= 8, then store to x1
 - https://developer.arm.com/documentation/102374/0102
 - https://web.archive.org/web/20240829145252/https://modexp.wordpress.com/2018/10/30/arm64-assembly/
 - https://mariokartwii.com/armv8/
+

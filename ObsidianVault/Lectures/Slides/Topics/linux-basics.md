@@ -9,7 +9,9 @@
 
 - A fancy resource manager.
 - Abstracts away device management (CPU, memory, I/O devices, etc.).
-- Exports an interface for user applications (system calls, libraries) to interact with hardware indirectly.
+- Exports logical interface for user applications (system calls, libraries) to interact with hardware indirectly.
+-  Why? **makes it easier to write programs that run on a variety of hardware without knowing all low level details **
+	- we will focus on its ability to make running programs simple-- i.e. without having to care about the gory details of the underlying hardware 
 
 ---
 <!-- slide template="[[Base Slide]]" -->
@@ -20,11 +22,11 @@
 
 :::
 
-- _virtualization_ of resources.
+- The component of the OS responsible for  _virtualization_ of resources.
 	- The kernel is a dirty dirty liar
 - Coordinates CPU, memory, and I/O device interactions.
 - Implements isolation and protection so userland processes don’t directly manipulate hardware.
-- monolithic vs micro vs hybrid
+- Comes in many flavors such as monolithic vs micro vs hybrid
 ---
 <!-- slide template="[[Base Slide]]" -->
 
@@ -37,7 +39,8 @@
 - Open-source, community-developed.
 - Multi-architecture: supports 32-bit, 64-bit x86, ARM (including AArch64), RISC-V, and more.
 - Broad usage in servers, desktops, embedded systems, IoT devices, HPC, mobile (Android), and beyond.
-- We’ll focus on a 64-bit ARM (ARMv8-A / AArch64) distribution Raspbery Pi OS .
+- We’ll focus on a 64-bit ARM (ARMv8-A / AArch64)  Ubuntu distribution of Linux.
+	- Blah blah "GNU+Linux" Blah Blah
 
 ---
 <!-- slide template="[[Base Slide]]" -->
@@ -55,117 +58,6 @@
 - Supercomputers (HPC clusters)
 - Each environment has different constraints (power, screen size, memory, etc.).
 
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### (Some) Linux Design Principles
-
-:::
-
-- Open source
-- Portability
-- Modularity (kernel modules, subsystems)
-- Performance
-- Security (mandatory or discretionary)
-- Stability (POSIX compliance, stable user APIs)
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Extensibility
-
-:::
-
-- Most Linux functionality lives in kernel subsystems (VFS, networking stack, device drivers).
-- Loadable kernel modules (LKMs) can be dynamically inserted/removed.
-- Separation of userland and kernel helps keep user-space additions flexible.
-- Linux distributions package userland programs as well, but the core is the kernel + standard libraries.
-- Monolithic means one subsystem can break another :)
----
-<!-- slide template="[[Base Slide]]" -->
-::: title
-
-#### Portability
-
-:::
-
-- Linux runs on x86, ARM, RISC-V, PowerPC, MIPS, and more.
-- Kernel code is mostly in C (with some assembly for architecture-specific functionality).
-- The Hardware Abstraction Layer (HAL)  is typically integrated directly in architecture subdirectories (arch/arm64, arch/x86, etc.) within the kernel.
-
----
-<!-- slide template="[[Split Vertical]]" -->
-
-::: title
-
-#### Reliability
-
-:::
-
-::: left 
-- User applications cannot typically crash the kernel due to robust memory isolation.
-- Kernel module signing and Secure Boot exist to mitigate malicious or buggy LKMs.
-- However, a kernel module can still crash the system if it’s badly coded—so caution is necessary.
-
-:::
-::: right
-![[memory-protections.png]]
-:::
-
-
----
-<!-- slide template="[[Split Vertical]]" -->
-
-::: title
-
-#### Performance
-
-:::
-
-::: left
-
-- Linux emphasizes scalability across hardware from microcontrollers (embedded linux) to supercomputers.
-- there are even real time variants
-:::
-
-::: right
-![[stolen_meme_arch_v_win.png]]
-<small>
-https://preview.redd.it/k12r6k1g4ar51.png?width=1080&crop=smart&auto=webp&s=e191c362dd3c9edb63a304995571c93f4b7fcd59
-</small>
-:::
-
----
-<!-- slide template="[[Base Slide]]" -->
-::: title
-
-#### Compatibility
-
-:::
-
-- Linux userland aims for POSIX compliance, but distributions can differ.
-- The user-space ABI (Application Binary Interface) is quite stabe
-	- But differences in LIBC versions, file system layouts ..etc can make creating a "build once  anywhere" binaries for distros challenging 
-- The kernel internal APIs can evolve more frequently, but glibc and userland see fewer breaking changes compared to kernel modules.
-- ...this is of course only in theory.
-	- syscall changes, libc versions,  distro fragmentation ...etc
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Security
-
-:::
-
-- Separation of kernel and user mode.
-- User/Group/Other permissions, SELinux or AppArmor for MAC.
-- Each process has its own private virtual address space
 
 ---
 <!-- slide template="[[Base Slide]]" -->
@@ -175,180 +67,14 @@ https://preview.redd.it/k12r6k1g4ar51.png?width=1080&crop=smart&auto=webp&s=e191
 
 :::
 
-- Monolithic design with dynamically loadable modules.
-- Everything is represented as a file or file descriptor (including devices) in userland.
+- Monolithic design (optionally) with dynamically loadable modules.
+- Userland vs Kernel
+- Most low level objects and their lifetimes are managed by the *kernel* 
+- These objects are represented as a  *file descriptor* (including devices) in userland.
 - Resource objects exist in-kernel (task_struct, inodes, etc.) but are not directly accessible to userland.
-- System calls are used for interacting with the kernel from userland
+- The kernel brokers access to these objects and exports an interface for userland in the form of System calls (syscalls)
+	- These require hardware support to implement 
 
-
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Linux System Architecture
-
-:::
-
-- **User Processes**
-- **Standard Libraries (glibc, musl, etc.)**
-- **System Call Interface**
-- **Kernel Subsystems** (VFS, memory manager, scheduler, networking)
-- **Device Drivers**
-- **(Sometimes) Hypervisor** (KVM)
-- Lots of other subsystems. 
-
-
-
----
-## How Do We Interact With the Linux API?
----
-C/asm
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### C Overview
-
-:::
-
-- C/C++ is statically typed, compiled, widely used for systems programming.
-- Many Linux-based malware or system tools are in C/C++.
-- No garbage collector—developers manually manage memory (`malloc`, `free`).
-- We’ll use it for low-level systems programming on ARM64 Linux.
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Concepts You Need for This Class
-
-:::
-
-- Basic memory management in C (heap, stack).
-- Pointer arithmetic.
-- Basic C data types.
-- Familiarity with cross-compiling for ARM64 (if developing on x86_64).
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Compiler Toolchain for This Class
-
-:::
-
-- **gcc / g++**: The GNU compiler collection.
-- **clang / clang++**: LLVM-based toolchain.
-- **zig cc**: Another compiler frontend that can cross-compile out of the box.
-- We can use `make` or `CMake` to simplify building.
-- Cross-compilation: e.g., `aarch64-linux-gnu-gcc` if you’re on x86_64 but need ARM64 binaries.
-
-
----
-<!-- slide template="[[Split Vertical]]" -->
-
-::: title
-
-#### Interacting With the Linux OS
-
-:::
-::: left
-- **System calls**: The core API to talk to the kernel (e.g. `open`, `read`, `write`, `fork`, `execve`).
-- Several libraries that ultimately make syscalls 
-- **C library**: Offers convenient wrappers around syscalls.
-- **POSIX** / Extended Linux APIs.
-- **Direct Syscalls**: Rarely done manually in C—usually you call glibc or another library.
-:::
-::: right
-
-![[open_syscall_check.excalidraw.dark.svg]]
-
-:::
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Dynamically Linked Libraries (so)
-
-:::
-
-
-##### Refresh: What Is a Shared Object?
-
-- A file with the “.so” extension that contains compiled code and exported functions.
-- Dynamically loaded at runtime by the linker (ld-linux, ld.so).
-- Reduces memory footprint and disk usage when multiple processes share the same library code.
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Shared Objects in Linux
-
-:::
-
-- Typically built as ELF files with a “shared” type.
-- Provide exported functions that your process can call at runtime.
-- Examples: `libc.so`, `libm.so`, `libpthread.so`.
-	- usually there: `libcrypso.so`, `libssl.so`
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### The Linux C Runtime (glibc / musl)
-
-:::
-
-- Most common on mainstream distros is **glibc**. Some embedded systems use **musl** or **uclibc**.
-- Offers standard C library functions: I/O, string manipulation, memory allocation.
-- Sits on top of the Linux syscall interface.
-- Maintains compatibility across kernel versions for user apps.
-- Usually dynamically linked, but can be statically linked in some cases (musl)
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Syscalls
-
-:::
-- the mechanism for calling into the kernel 
-- "Please kernel, may I have some X"
-- Example:
-    - `sys_open()` is the kernel function behind `open()` in glibc.
-    - `sys_clone()` behind `pthread_create()` or `fork()` depending on usage.
-- Typically invoked from user space via wrapper functions in the standard C library.
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Example: hello world for the 10th time
-
-:::
-
-```c
-#include <stdio.h>
-
-int main(){
-    printf("Hello world!\n");
-    return 0;
-}
-```
-
-- Under the hood, this calls `write()` on file descriptor 1 (stdout) via glibc’s `printf`.
-- On ARM64, glibc uses the `svc #0` instruction to trigger a syscall, passing registers set up for `SYS_write`.
 
 
 ---
@@ -386,6 +112,34 @@ int main(){
 
 
 ---
+<!-- slide template="[[Split Vertical]]" -->
+
+::: title
+
+#### Interacting With the Linux OS
+
+:::
+::: left
+- "Everything is a file"
+- sh/bash/zsh...etc
+- System calls: The core API to talk to the kernel (e.g. `open`, `read`, `write`, `fork`, `execve`).
+- Several libraries that ultimately make syscalls 
+- C library: Offers convenient wrappers around syscalls.
+- POSIX / Extended Linux APIs.
+- Direct Syscalls: Rarely done manually in C
+		- usually you call glibc or another library.
+		- Can be useful if for whatever reason you don't know where Libc is in memory or if it isn't loaded at all!
+:::
+::: right
+
+![[open_syscall_check.excalidraw.dark.png|600]]
+
+:::
+
+
+
+
+---
 <!-- slide template="[[Base Slide]]" -->
 
 ::: title
@@ -404,21 +158,6 @@ int main(){
 
 
 
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Processes
-
-:::
-
-- A process is essentially a container for resources required to run a program: memory, file descriptors, scheduling parameters, etc.
-- All userland code runs inside _some_ process context.
-- A process is identified by a PID (process ID).
-- PIDs are globally unique
-- PPID = parent PID 
-- Code actually runs via one or more threads within the process.
 ---
 <!-- slide template="[[Base Slide]]" -->
 
@@ -488,6 +227,34 @@ root          11  0.0  0.0      0     0 ?        I    Jan08   0:00 [kworker/u8:0
 
 
 
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### `/proc/%d/fd/` 
+
+:::
+- entries in the file descriptor table can be found  in `/proc/<pid>/fd/<fd_num>`
+- echo "hi there" >/proc/`echo $$`/fd/0
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Processes
+
+:::
+
+- A process is essentially a container for resources required to run a program: memory, file descriptors, scheduling parameters, etc.
+- All userland code runs inside _some_ process context.
+- A process is identified by a PID (process ID).
+- PIDs are globally unique
+- PPID = parent PID 
+- Code actually runs via one or more threads within the process.
+
 ---
 <!-- slide template="[[Base Slide]]" -->
 
@@ -502,102 +269,6 @@ root          11  0.0  0.0      0     0 ?        I    Jan08   0:00 [kworker/u8:0
 - Linux implements threads as processes that share many resources (e.g., memory, FD table).
 - On ARM64, each thread can independently run on any available CPU core.
 
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### `/proc/%d/fd/` 
-
-:::
-- entries in the file descriptor table can be found  in `/proc/<pid>/fd/<fd_num>`
-- echo "hi there" >/proc/`echo $$`/fd/0
-
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Process Creation 
-
-:::
-- ultimately, the kernel is responsible for creating/destroying processes 
-- Linux provides multiple ways to create new processes.
-- Key system calls for process creation:
-  - `fork`
-  - `execve`
-  - `posix_spawn()` (not covered)
-  - other weird ways
-- library functions 
-- `system()` (calls fork)
-  - `popen()` (calls fork)
-
-
-
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Comparison 
-
-:::
-
-|Method|Creates Process?|Replaces Process?|Can Capture Output?|Recommended Use|
-|---|---|---|---|---|
-|`fork()`|✅ Yes|❌ No|❌ No|General process creation|
-|`vfork()`|✅ Yes|❌ No|❌ No|Fast process creation (risky)|
-|`execve()`|❌ No|✅ Yes|❌ No|Run a new program|
-|`posix_spawn()`|✅ Yes|❌ No|❌ No|Portable, optimized process creation|
-|`system()`|✅ Yes|❌ No|❌ No|Simple shell command execution|
-|`popen()`|✅ Yes|❌ No|✅ Yes|Capture process output|
-
----
-<!-- slide template="[[Split Vertical]]" -->
-
-::: title
-
-#### `fork`
-:::
-::: left
-Creates a duplicate of the calling process.
-- **Returns:**
-  - **0** for the child process.
-  - **PID of the child** for the parent process.
-  - **-1** if creation fails.*
-  - `man fork`
-::: 
-::: right 
-<iframe width="908" height="511" src="https://www.youtube.com/embed/jVhMt26F7gA?start=27" title="2 Chainz - Fork (Official Music Video) (Explicit)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-:::
-
-
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### `execve`
-:::
-- Replaces the current process with a new one.
-- **Does NOT return** if successful.
-- **Common variants:** `execl()`, `execv()`, `execle()`, `execvp()`.
-- `man execve`
-
-
----
-<!-- slide template="[[Base Slide]]" -->
-
-::: title
-
-#### Libc Process creation
-:::
-- `system: system("ls -l");`
-- `popen: `Runs a command and **redirects its output**
- 
 
 ---
 <!-- slide template="[[Split Vertical]]" -->
@@ -614,6 +285,9 @@ Creates a duplicate of the calling process.
 - Usually Address is Physical Page Number (PPN) + offset
 - On ARM64, addresses are 64-bit but typically not all 64 bits are used (e.g., 48-bit or 52-bit virtual addressing depending on kernel config).
 - Byte-addressable means each address points to an 8-bit chunk.
+- Memory is organized into segments. 
+	- `/proc/self/maps`
+	- `/proc/self/mem`
 :::
 ::: right
 
@@ -686,10 +360,10 @@ $ cat /proc/self/maps
 :::
 
 - Page tables & translation walks (done by hardware MMU).
-- 4 KB pages by default on many ARM64 configs, sometimes 64 KB.
+-  Usually 4 KB pages by default on many ARM64 configs, sometimes 64 KB.
 - Memory protections (read, write, execute bits).
 - Kernel address space vs. user address space.
-- PPN/VPN
+	- PPN/VPN
 
 ---
 <!-- slide template="[[Base Slide]]" -->
@@ -704,6 +378,9 @@ $ cat /proc/self/maps
 - User space typically in lower half of the virtual address space, kernel in upper half.
 - The stack grows downward, the heap grows upward.
 - The binary’s code (.text), data (.data, .bss), and other segments are mapped into memory at runtime.
+
+
+
 
 
 ---
@@ -839,4 +516,230 @@ tmpfs           5.0M   48K  5.0M   1% /run/lock
 /dev/nvme0n1p1  510M   64M  447M  13% /boot/firmware
 tmpfs           806M   16K  806M   1% /run/user/1000
 ```
+
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### C Overview
+
+:::
+
+- Standard way to interact with OS is to call APIs using an agreed upon ABI
+	- in theory any programming language can interact with this interface 
+- C/C++ is statically typed, compiled, widely used for systems programming.
+- Many Linux-based malware or system tools are in C/C++.
+- No garbage collector—developers manually manage memory (`malloc`, `free`).
+- We’ll use it for low-level systems programming on ARM64 Linux.
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### C Concepts You Need for This Class
+
+:::
+
+- Basic memory management in C (heap, stack).
+- Pointer arithmetic.
+- Basic C data types.
+- Familiarity with Compiler toolchains
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Compiler Toolchain for This Class
+
+:::
+
+- **gcc / g++**: The GNU compiler collection.
+- **clang / clang++**: LLVM-based toolchain.
+- **zig cc**: Another compiler frontend that can cross-compile out of the box.
+- We can use `make` or `CMake` to simplify building.
+- Cross-compilation: e.g., `aarch64-linux-gnu-gcc` if you’re on x86_64 but need ARM64 binaries.
+
+
+
+---
+<!-- slide template="[[Base Slide]]" -->
+::: title
+#### ELF File Format: Basic Definitions 
+:::
+
+- **ELF** (Executable and Linkable Format) is used by Linux (and many other Unix-like OSes)
+- Standard executable file format. When a program is run  on a Linux system, it is often times an ELF file that is being executed. 
+- It describes how code and data are laid out, plus metadata for loading
+- Tools like `readelf`, `objdump`, `file` help examine ELF files
+
+---
+
+<!-- slide template="[[Base Slide]]" -->
+::: title
+#### ELF File Format on Linux/aarch64
+:::
+
+- Used for both userland and kernel modules
+  - Userland: typical `.out`, `.so`, or no extension at all  
+  - Kernel modules: `.ko` files  
+- Architecture is specified inside the ELF headers (e.g., 0xB7 for AArch64, etc.)
+- Data is grouped into segments and sections. Each section has a header with layout info
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Dynamically Linked Libraries (so)
+
+:::
+
+
+##### Refresh: What Is a Shared Object?
+
+- A file with the “.so” extension that contains compiled code and exported functions.
+- Dynamically loaded at runtime by the linker (ld-linux, ld.so).
+- Reduces memory footprint and disk usage when multiple processes share the same library code.
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Shared Objects in Linux
+
+:::
+
+- ELF files with a “shared” type.
+- Provide exported functions that your process can call at runtime.
+- Examples: `libc.so`, `libm.so`, `libpthread.so`.
+	- usually there: `libcrypso.so`, `libssl.so`
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### The Linux C Runtime (glibc / musl)
+
+:::
+
+- Most common on mainstream distros is **glibc**. Some embedded systems use **musl** or **uclibc**.
+- Offers standard C library functions: I/O, string manipulation, memory allocation.
+- Sits on top of the Linux syscall interface.
+- Maintains compatibility across kernel versions for user apps.
+- Usually dynamically linked, but can be statically linked in some cases (musl)
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Example: hello world for the 10th time
+
+:::
+
+```c
+#include <stdio.h>
+
+int main(){
+    printf("Hello world!\n");
+    return 0;
+}
+```
+
+- Under the hood, this calls `write()` on file descriptor 1 (stdout) via glibc’s `printf`.
+- On ARM64, glibc uses the `svc #0` instruction to trigger a syscall, passing registers set up for `SYS_write`.
+
+
+
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Process Creation 
+
+:::
+- ultimately, the kernel is responsible for creating/destroying processes 
+- Linux provides multiple ways to create new processes.
+- Key system calls for process creation:
+  - `fork`
+  - `execve`
+  - `posix_spawn()` (not covered)
+  - other weird ways
+- library functions 
+- `system()` (calls fork)
+  - `popen()` (calls fork)
+
+
+
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Comparison 
+
+:::
+
+|Method|Creates Process?|Replaces Process?|Can Capture Output?|Recommended Use|
+|---|---|---|---|---|
+|`fork()`|✅ Yes|❌ No|❌ No|General process creation|
+|`vfork()`|✅ Yes|❌ No|❌ No|Fast process creation (risky)|
+|`execve()`|❌ No|✅ Yes|❌ No|Run a new program|
+|`posix_spawn()`|✅ Yes|❌ No|❌ No|Portable, optimized process creation|
+|`system()`|✅ Yes|❌ No|❌ No|Simple shell command execution|
+|`popen()`|✅ Yes|❌ No|✅ Yes|Capture process output|
+
+---
+<!-- slide template="[[Split Vertical]]" -->
+
+::: title
+
+#### `fork`
+:::
+::: left
+Creates a duplicate of the calling process.
+- **Returns:**
+  - **0** for the child process.
+  - **PID of the child** for the parent process.
+  - **-1** if creation fails.*
+  - `man fork`
+::: 
+::: right 
+<iframe width="908" height="511" src="https://www.youtube.com/embed/jVhMt26F7gA?start=27" title="2 Chainz - Fork (Official Music Video) (Explicit)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+:::
+
+
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### `execve`
+:::
+- Replaces the current process with a new one.
+- **Does NOT return** if successful.
+- **Common variants:** `execl()`, `execv()`, `execle()`, `execvp()`.
+- `man execve`
+
+
+---
+<!-- slide template="[[Base Slide]]" -->
+
+::: title
+
+#### Libc Process creation
+:::
+- `system: system("ls -l");`
+- `popen: `Runs a command and **redirects its output**
+ 
 

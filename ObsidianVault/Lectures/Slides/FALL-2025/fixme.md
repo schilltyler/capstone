@@ -1,0 +1,27 @@
+---
+slideNumber: true
+theme: night
+---
+
+---
+<!-- slide bg="[[Green Logo.svg]]" background-size="auto" -->
+
+
+---
+<!-- slide template="[[Split Vertical]]" -->
+::: title
+#### CS-4973/6983
+:::
+::: left
+![[Green Logo.svg | 400]] <!-- element style="object-fit: cover" -->
+
+:::
+::: right
+<!-- element style="font-size: 32px;align:center" -->
+Introduction to Malware, Threat Hunting & Offensive Capabilities Development
+:::
+
+
+
+
+![[linux_file_io]]

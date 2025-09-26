@@ -8,10 +8,10 @@
 
 :::
 
-- The Raspberry Pi is a low-cost, credit card-sized single-board computer developed by the Raspberry Pi Foundation.
-- It was created to promote computer science education and provide an affordable platform for experimentation.
-- Despite its small size, it functions as a fully operational computer capable of running various operating systems, primarily Linux-based.
+- The Raspberry Pi is a low-cost, credit card-sized single-board computer (SBC).
+- Despite its small size, it functions as a fully operational computer capable of running  rich operating systems such as Linux.
 - The Raspberry Pi supports interfacing with sensors and actuators through its general-purpose input/output (GPIO) pins, making it suitable for hardware projects.
+- It is a great first computer for getting started with home labing :)
 - Source: [slideshare.net](https://www.slideshare.net/jaravles/raspberry-pi-241223849?utm_source=chatgpt.com)
 
 ---
@@ -23,27 +23,10 @@
 
 :::
 
-- **Size and Cost**: The Raspberry Pi is significantly smaller and more affordable than traditional desktop computers.
-- **Performance**: While capable, the Raspberry Pi's performance is generally lower due to its compact design and energy efficiency.
-- **Expandability**: Desktops offer greater expandability with multiple ports and slots, whereas the Raspberry Pi has limited expansion options.
-- **Intended Use**: The Raspberry Pi is designed for education, prototyping, and lightweight tasks, while desktops are built for a broader range of applications, including resource-intensive tasks.
+- Significantly smaller and more affordable than traditional desktop computers.
+-  While capable, the Raspberry Pi's performance is generally lower due to its compact design and energy efficiency.
+-  The Raspberry Pi is designed for education, prototyping, and lightweight tasks, 
 - Source: [slideshare.net](https://www.slideshare.net/slideshow/raspberry-pi-01082014/37565010?utm_source=chatgpt.com)
-
----
-
-<!-- slide template="[[Base Slide]]" -->
-::: title
-
-#### Understanding ARM Cortex
-
-:::
-
-- **ARM Cortex**: A family of processors developed by ARM Holdings, known for their energy efficiency and performance.
-- **Architecture**: Based on Reduced Instruction Set Computing (RISC), which simplifies instructions to achieve higher performance per watt.
-- **Usage in Raspberry Pi**: Raspberry Pi models utilize ARM Cortex processors, balancing computational power with low energy consumption.
-- **Variants**: Includes Cortex-A (applications), Cortex-R (real-time), and Cortex-M (microcontroller) series, each tailored for specific use cases.
-- Source: [slideshare.net](https://www.slideshare.net/slideshow/raspberry-pi-01082014/37565010?utm_source=chatgpt.com)
-
 
 
 
