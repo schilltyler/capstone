@@ -9,8 +9,9 @@ PASSWORD ?= DEADBEEF
 # TODO commands - students can uncomment these as they implement each command
 # This will keep the stub implementation that returns "not yet implemented"
 # Remove a command from this list once you've implemented it
-#TODO_CMDS = mingrep tailf sed bgrep timestomp wc djb2sum runrwx proc_maps
-TODO_CMDS =
+#TODO_CMDS = tailf sed bgrep timestomp wc djb2sum runrwx proc_maps
+TODO_CMDS = tailf sed timestomp wc djb2sum runrwx proc_maps
+#TODO_CMDS =
 # Generate -DTODO_CMD_<name> flags for each TODO command
 TODO_FLAGS = $(foreach cmd,$(TODO_CMDS),-DTODO_CMD_$(cmd))
 

@@ -15,4 +15,7 @@ static struct rpc_response g_resp;
 
 void _start(void) {
   // Your solution here!
+  // connect to the serer
+  // handle authentication
+  // event loop: get RPC Request and execute
 }

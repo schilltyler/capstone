@@ -2,8 +2,8 @@
 #ifndef CMDS_H
 #define CMDS_H
 
-#include "types.h"
 #include "rpc.h"
+#include "types.h"
 
 /* Forward declarations */
 struct rpc_response;
@@ -26,7 +26,6 @@ int handle_append_file(int sockfd, const char *path);
 /* ========================================================================
  * Search and analysis operations
  * ======================================================================== */
-int handle_mingrep(const char *path, const char *pattern, struct rpc_response *resp);
 int handle_bgrep(int sockfd, const char *path, const char *hex_pattern);
 int handle_tailf(int sockfd, const char *path);
 
