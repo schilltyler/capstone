@@ -1,14 +1,14 @@
 ```
 ═══════════════════════════════════════════════════════════════════════════
                          FUNCLASSIFIED MATERIAL
-                      TOP SECRET//NOFORN//CHINCHILLA
+                      TOP SECRET//NOBUTUS//CHINCHILLA
 ═══════════════════════════════════════════════════════════════════════════
 ```
 
 # TECHNICAL SPECIFICATION DOCUMENT
 
 **Program:** FLAMBOYANT CHINCHILLA
-**Classification:** TOP SECRET//NOFORN/NOFUN
+**Classification:** TOP SECRET//NOBUTUS/NOFUN
 **Issuing Authority:** Network Observability Command (NOC)
 **Document Version:** 1.0
 **Date:** 2025-10-06
