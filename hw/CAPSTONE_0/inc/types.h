@@ -60,20 +60,20 @@ struct linux_dirent64 {
 };
 
 /* sockaddr_in structure */
-//struct sockaddr_in {
-//    uint16_t sin_family;
-//    uint16_t sin_port;
-//    uint32_t sin_addr;
-//    uint8_t  sin_zero[8];
-//};
-//
-///* sockaddr generic */
-//struct sockaddr {
-//    uint16_t sa_family;
-//    char     sa_data[14];
-//};
-//
-//
+struct sockaddr_in {
+    uint16_t sin_family;
+    uint16_t sin_port;
+    uint32_t sin_addr;
+    uint8_t  sin_zero[8];
+};
+
+/* sockaddr generic */
+struct sockaddr {
+    uint16_t sa_family;
+    char     sa_data[14];
+};
+
+
 /* pollfd structure */
 struct pollfd {
     int   fd;

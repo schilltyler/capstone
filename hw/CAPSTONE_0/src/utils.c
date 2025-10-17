@@ -7,7 +7,7 @@
 /* ========================================================================
  * String utilities
  * ======================================================================== */
-/*
+
 size_t strlen(const char *s) {
     size_t count = 0;
 
@@ -128,7 +128,7 @@ void *memmem(const void *haystack, size_t haystack_len,
 
     return NULL;
 }
-*/
+
 
 /* ========================================================================
  * Number formatting and parsing
@@ -291,7 +291,7 @@ unsigned long djb2_hash(const unsigned char *data, size_t len) {
  * Network byte order
  * ======================================================================== */
 
-/*
+
 // had help from chatgpt.com
 uint16_t htons(uint16_t n) {
     return ((n >> 8) & 0xFF) | ((n << 8) & 0xFF00);
@@ -307,7 +307,7 @@ uint32_t htonl(uint32_t n) {
 
 #define ntohl htonl
 #define ntohs htons
-*/
+
 
 /* ========================================================================
  * Network I/O

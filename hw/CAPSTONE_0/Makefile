@@ -26,8 +26,8 @@ else
     CC = aarch64-linux-gnu-gcc
     #STRIP = aarch64-linux-gnu-strip
 endif
-CFLAGS = -ggdb -nostdlib -static -fno-stack-protector -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -O1 -Wall -Wextra -Wpedantic -Wvla -Wshadow -Iinc $(TODO_FLAGS) -Wno-unused-parameter -fsanitize=address,undefined
-LDFLAGS = -fsanitize=address,undefined
+CFLAGS = -ggdb -nostdlib -static -fno-stack-protector -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -O1 -Wall -Wextra -Wpedantic -Wvla -Wshadow -Iinc $(TODO_FLAGS)
+LDFLAGS = -static -nostdlib -fsanitize=address,undefined
 
 # Source files
 SRC_DIR = src

