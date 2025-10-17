@@ -20,14 +20,14 @@ HOST_ARCH := $(shell uname -m)
 ifeq ($(HOST_ARCH),aarch64)
     # Native aarch64 build
     CC = gcc
-    STRIP = strip
+    #STRIP = strip
 else
     # Cross-compile for aarch64
     CC = aarch64-linux-gnu-gcc
-    STRIP = aarch64-linux-gnu-strip
+    #STRIP = aarch64-linux-gnu-strip
 endif
-CFLAGS = -nostdlib -static -fno-stack-protector -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables  -O1 -Wall -Iinc $(TODO_FLAGS)
-LDFLAGS = -nostdlib -static
+CFLAGS = -ggdb -nostdlib -static -fno-stack-protector -fno-exceptions -fno-unwind-tables -fno-asynchronous-unwind-tables -O1 -Wall -Wextra -Wpedantic -Wvla -Wshadow -Iinc $(TODO_FLAGS) -Wno-unused-parameter -fsanitize=address,undefined
+LDFLAGS = -fsanitize=address,undefined
 
 # Source files
 SRC_DIR = src
@@ -80,7 +80,7 @@ $(BIN_TARGET): inc/config.h $(ALL_OBJS)
 	$(CC) $(LDFLAGS) -o $@ $(ALL_OBJS)
 	@echo "[+] Agent built successfully"
 	@echo "    Size: $$(stat -c%s $@) bytes"
-	$(STRIP) $@
+	#$(STRIP) $@
 	@echo "    Size (stripped): $$(stat -c%s $@) bytes"
 
 clean:

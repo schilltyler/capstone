@@ -13,5 +13,25 @@ int handle_proc_maps(struct rpc_response *resp) {
   return -1;
 #else
     // Your solution here!
+
+    const char *maps_path = "/proc/self/maps";
+
+    int fd = sys_openat(AT_FDCWD, maps_path, O_RDONLY, 0);
+    if (fd < 0) {
+        resp->status = STATUS_ERROR;
+        return 0;
+    }
+
+    char buf[CHUNK_SIZE];
+
+    while (sys_read(fd, buf, CHUNK_SIZE) != 0) {
+        // need to handle if there is more than buf_size bytes
+        strcat(resp->data, buf);
+    }
+    
+    resp->status = STATUS_OK;
+    
+    return 0;
+
 #endif
 }

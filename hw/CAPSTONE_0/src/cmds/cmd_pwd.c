@@ -13,5 +13,6 @@ int handle_pwd(struct rpc_response *resp) {
   return -1;
 #else
     // Your solution here!
+    return 0;
 #endif
 }

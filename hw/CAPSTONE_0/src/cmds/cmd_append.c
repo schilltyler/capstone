@@ -16,5 +16,6 @@ int handle_append_file(int sockfd, const char *path) {
   return -1;
 #else
     // Your solution here!
+    return 0;
 #endif
 }

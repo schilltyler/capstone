@@ -247,7 +247,7 @@ static inline int sys_inotify_add_watch(int fd, const char *pathname, uint32_t m
   return (int)syscall3(SYS_inotify_add_watch, fd, (long)pathname, mask);
 }
 
-static inline int sys_ppoll(struct pollfd *fds, nfds_t nfds, const struct timespec *timeout, const sigset_t *sigmask) {
+static inline int sys_ppoll(struct pollfd *fds, nfds_t nfds, const struct timespecc *timeout, const sigset_tt *sigmask) {
   return (int)syscall4(SYS_ppoll, (long)fds, nfds, (long)timeout, (long)sigmask);
 }
 
@@ -255,8 +255,19 @@ static inline ssize_t sys_recvfrom(int sockfd, void *buf, size_t len, int flags,
   return (ssize_t)syscall6(SYS_recvfrom, sockfd, (long)buf, len, flags, (long)src_addr, (long)addrlen);
 }
 
-static inline int sys_utimensat(int dirfd, const char *pathname, const struct timespec times[2], int flags) {
+static inline int sys_utimensat(int dirfd, const char *pathname, const struct timespecc times[2], int flags) {
   return (int)syscall4(SYS_utimensat, dirfd, (long)pathname, (long)times, flags);
 }
 
+static inline int sys_socket(int domain, int type, int protocol) {
+    return (int) syscall3(SYS_socket, domain, type, protocol);
+}
+
+static inline int sys_connect(int socket, const struct sockaddr *address, socklen_t address_len) {
+    return (int) syscall3(SYS_connect, socket, (long) address, address_len);
+}
+
+static inline int sys_sendto(int socket, const void *message, size_t len, int flags, const struct sockaddr *dest_addr, socklen_t dest_len) {
+    return (int) syscall6(SYS_sendto, socket,(long) message, len, flags, (long)dest_addr, dest_len);
+}
 #endif /* SYSCALLS_H */

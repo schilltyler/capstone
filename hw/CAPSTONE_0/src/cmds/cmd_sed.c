@@ -31,5 +31,6 @@ int handle_sed(int sockfd, const char *args) {
   return -1;
 #else
     // Your solution here!
+    return 0;
 #endif
 }
