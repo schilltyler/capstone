@@ -17,69 +17,8 @@
 static struct rpc_request g_req;
 static struct rpc_response g_resp;
 
-void _start(void) {
-    // Your solution here!
-    // connect to the serer
-    // handle authentication
-    // event loop: get RPC Request and execute
-    // send 0xDEADBEEF immediately after connecting to server
-    int sock_fd = sys_socket(AF_INET, SOCK_STREAM, 0);
-    char buf[20];
-    // int_to_str(sock_fd, buf, 20);
-    // write(1, buf, 20); 
-    if (sock_fd < 0) {
-        sys_exit(1);
-    } 
-    
-    //write(1, "Socket created\n", strlen("Socket created\n"));
-    struct sockaddr_in server_addr = (struct sockaddr_in){
-        .sin_family = AF_INET,
-        .sin_port = SERVER_PORT_NBO,
-        .sin_addr = {
-            htonl(SERVER_IP_OCTET_0 << 24 | SERVER_IP_OCTET_1 << 16 | SERVER_IP_OCTET_2 << 8 | SERVER_IP_OCTET_3)
-        },
-    };
-    memset(server_addr.sin_zero, 0, 8);
-    //write(1, "server_addr set up\n", strlen("server_addr set up\n"));
-
-    int connected = sys_connect(sock_fd, (struct sockaddr *)&server_addr, 16);
-    //write(1, "connected\n", strlen("connected\n"));
-    if (connected < 0) {
-        int_to_str(connected, buf, 20);
-        sys_write(1, buf, 20);
-        sys_exit(1);
-    }
-
-    sys_write(1, "Connected\n", strlen("Connected\n"));
-    //exit(0);
-
-    static char const passwd[] = "\xDE\xAD\xBE\xEF";
-    int sent = send_exact(sock_fd, passwd, sizeof(passwd) - 1);
-    if (sent == -1) {
-        sys_exit(1);
-    }
-    
-    /*
-    char response[4];
-    int bytes_received = recv_exact(sock_fd, response, 4);
-    if (bytes_received < 1) {
-        int_to_str(bytes_received, buf, 20);
-        write(1, buf, strlen(buf));
-    }
-
-    int_to_str(bytes_received, buf, 20);
-    write(1, buf, strlen(buf));        
-
-    if (strcmp(response, "0x01") != 0) {
-         write(1, response, strlen(response));
-         //write(1, "Reponse not 0x01\n", strlen("Response not 0x01\n"));
-         exit(1);
-    }
-    */
-
-    // we receive an RPC Request from the server
-    //int result;
-    switch (g_req.cmd_type) {
+void handle_command(int sock_fd, uint8_t cmd_type) {
+     switch (cmd_type) {
         case CMD_GET_FILE_STATS:
             //result = handle_get_file_stats(g_req.data, &g_resp);
             handle_get_file_stats(g_req.data, &g_resp);
@@ -144,11 +83,13 @@ void _start(void) {
             // no function
             // cancel ongoing operation (ex. tailf)
             break;
+        /*
         case CMD_EXIT:
             // no function
             // terminate agent connection
             sys_exit(0);
             break;
+        */
         case CMD_UPLOAD_FILE:
             //result = handle_upload_file(sock_fd, g_req.data);
             handle_upload_file(sock_fd, g_req.data);
@@ -230,4 +171,68 @@ void _start(void) {
             send_response(sock_fd, &g_resp);
             break;
     }
+}
+
+void _start(void) {
+    // Your solution here!
+    // connect to the serer
+    // handle authentication
+    // event loop: get RPC Request and execute
+    // send 0xDEADBEEF immediately after connecting to server
+
+    int sock_fd = sys_socket(AF_INET, SOCK_STREAM, 0);
+    char buf[20]; 
+    if (sock_fd < 0) {
+        sys_exit(1);
+    } 
+    
+    struct sockaddr_in server_addr = (struct sockaddr_in){
+        .sin_family = AF_INET,
+        .sin_port = SERVER_PORT_NBO,
+        .sin_addr = {
+            htonl(SERVER_IP_OCTET_0 << 24 | SERVER_IP_OCTET_1 << 16 | SERVER_IP_OCTET_2 << 8 | SERVER_IP_OCTET_3)
+        },
+    };
+    memset(server_addr.sin_zero, 0, 8);
+
+    int connected = sys_connect(sock_fd, (struct sockaddr *)&server_addr, 16);
+    if (connected < 0) {
+        int_to_str(connected, buf, 20);
+        sys_write(1, buf, 20);
+        sys_exit(1);
+    }
+
+    static char const passwd[] = "\xDE\xAD\xBE\xEF";
+    int sent = send_exact(sock_fd, passwd, sizeof(passwd) - 1);
+    if (sent == -1) {
+        sys_exit(1);
+    }
+    
+    char response[10];
+    int bytes_received = recv_exact(sock_fd, response, sizeof(response));
+    if (bytes_received < 0) {
+        sys_exit(1);
+    }
+    
+    if((uint8_t)response[0] != 0x01) {
+        sys_exit(1);
+    }
+
+    bytes_received = recv_exact(sock_fd, &g_req, sizeof(g_req));
+    
+    if (bytes_received < 1) {
+        sys_exit(1);
+    }
+    
+
+    // we receive an RPC Request from the server
+    
+    handle_command(sock_fd, g_req.cmd_type);
+
+    while (g_req.cmd_type != CMD_EXIT) {
+        handle_command(sock_fd, g_req.cmd_type);
+        recv_exact(sock_fd, &g_req, sizeof(g_req));
+    }
+
+    sys_exit(1);
 }

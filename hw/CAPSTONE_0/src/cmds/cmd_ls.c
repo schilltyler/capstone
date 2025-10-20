@@ -36,6 +36,7 @@ int handle_ls(const char *path, struct rpc_response *resp) {
         }
         else {
             size_t bytes_read = raw_bytes_read;
+            resp->data[0] = '\0';
             for (size_t bpos = 0; bpos < bytes_read;) {
                 struct linux_dirent64 *d = (struct linux_dirent64 *) (dirp + bpos);
                 if (d->d_type == DT_REG) {
@@ -49,6 +50,7 @@ int handle_ls(const char *path, struct rpc_response *resp) {
                 }
    
                 strcat(resp->data, d->d_name);
+                strcat(resp->data, "\n");
                 bpos += d->d_reclen;
             }
         }

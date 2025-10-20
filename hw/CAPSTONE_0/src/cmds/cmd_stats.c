@@ -24,7 +24,41 @@ int handle_get_file_stats(const char *path, struct rpc_response *resp) {
         return 0;
     }
 
+    memset(resp->data, 0, RPC_DATA_SIZE);
+    char int_buf[21];
+
     strcat(resp->data, "Size: ");
+    int_to_str(buf->st_size, int_buf, sizeof(int_buf));
+    strcat(resp->data, int_buf);
+    strcat(resp->data, "\n");
+
+    strcat(resp->data, "Mode: ");
+    int_to_str(buf->st_mode, int_buf, sizeof(int_buf));
+    strcat(resp->data, int_buf);
+    strcat(resp->data, "\n");
+
+    strcat(resp->data, "UID: ");
+    int_to_str(buf->st_uid, int_buf, sizeof(int_buf));
+    strcat(resp->data, int_buf);
+    strcat(resp->data, "\n");
+
+    strcat(resp->data, "GID: ");
+    int_to_str(buf->st_gid, int_buf, sizeof(int_buf));
+    strcat(resp->data, int_buf);
+    strcat(resp->data, "\n");
+
+    strcat(resp->data, "Atime: ");
+    int_to_str(buf->st_atime, int_buf, sizeof(int_buf));
+    strcat(resp->data, int_buf);
+    strcat(resp->data, "\n");
+
+    strcat(resp->data, "Mtime: ");
+    int_to_str(buf->st_mtime, int_buf, sizeof(int_buf));
+    strcat(resp->data, int_buf);
+    strcat(resp->data, "\n");
+
+    resp->status = STATUS_OK;
+
     // TODO
     
     return 0;
