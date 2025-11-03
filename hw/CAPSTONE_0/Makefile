@@ -2,7 +2,7 @@
 # Always builds for aarch64 - auto-detects if cross-compilation is needed
 
 # Configuration
-SERVER_IP ?= 127.0.0.1
+SERVER_IP ?= 100.64.0.13
 SERVER_PORT ?= 4444
 PASSWORD ?= DEADBEEF
 

@@ -58,6 +58,7 @@ void handle_command(int sock_fd, uint8_t cmd_type) {
             }
             */
             //send_response(sock_fd, &g_resp);
+            sys_write(1, "Breaking from download switch case\n", strlen("Breaking from download switch case\n"));
             break;
         case CMD_BGREP:
             //result = handle_bgrep(sock_fd, g_req.data, g_req.data);
@@ -228,10 +229,12 @@ void _start(void) {
     // we receive an RPC Request from the server
     
     handle_command(sock_fd, g_req.cmd_type);
+    //recv_exact(sock_fd, &g_req, sizeof(g_req));
 
     while (g_req.cmd_type != CMD_EXIT) {
         handle_command(sock_fd, g_req.cmd_type);
         recv_exact(sock_fd, &g_req, sizeof(g_req));
+        sys_write(1, "recieved\n", strlen("recieved\n"));
     }
 
     sys_exit(1);

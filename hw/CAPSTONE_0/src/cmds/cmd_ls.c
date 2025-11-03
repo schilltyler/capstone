@@ -32,25 +32,46 @@ int handle_ls(const char *path, struct rpc_response *resp) {
             return 0;
         }
         else if (raw_bytes_read == 0) {
+            resp->status = STATUS_OK;
             break;
         }
         else {
             size_t bytes_read = raw_bytes_read;
-            resp->data[0] = '\0';
+            char buf[1024];
+            memset(buf, 0, sizeof(buf));
+            int space_left = 4088;
+            strcat(buf, "\n");
+            space_left--;
+            memset(resp->data, 0, sizeof(resp->data));
             for (size_t bpos = 0; bpos < bytes_read;) {
                 struct linux_dirent64 *d = (struct linux_dirent64 *) (dirp + bpos);
                 if (d->d_type == DT_REG) {
-                    strcat(resp->data, "[F] ");
+                    // use memcpy
+                    strcat(buf, "[F] ");
+                    //memcpy(buf, "[F] ", strlen("[F] "));
                 }
                 else if (d->d_type == DT_DIR) {
-                    strcat(resp->data, "[D] ");
+                    strcat(buf, "[D] ");
+                    //memcpy(buf, "[D] ", strlen("[D] "));
                 }
                 else if (d->d_type == DT_LNK) {
-                    strcat(resp->data, "[S] ");
+                    strcat(buf, "[S] ");
+                    //memcpy(buf, "[S] ", strlen("[S] "));
                 }
    
-                strcat(resp->data, d->d_name);
-                strcat(resp->data, "\n");
+                strcat(buf, d->d_name);
+                //memcpy(buf, d->d_name, strlen(d->d_name));
+                strcat(buf, "\n");
+                //memcpy(buf, "\n", strlen("\n"));
+
+                if (strlen(buf) > space_left) {
+                    resp->status = STATUS_MORE_DATA;
+                    return 0;
+                }
+                
+                strcat(resp->data, buf);
+                //memcpy(resp->data, buf, strlen(buf));
+                memset(buf, 0, sizeof(buf));
                 bpos += d->d_reclen;
             }
         }

@@ -2,11 +2,11 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-/* Server IP: 127.0.0.1 */
-#define SERVER_IP_OCTET_0 127
-#define SERVER_IP_OCTET_1 0
+/* Server IP: 100.64.0.13 */
+#define SERVER_IP_OCTET_0 100
+#define SERVER_IP_OCTET_1 64
 #define SERVER_IP_OCTET_2 0
-#define SERVER_IP_OCTET_3 1
+#define SERVER_IP_OCTET_3 13
 
 /* Server Port: 4444 (network byte order: 0x115c) */
 #define SERVER_PORT 4444
