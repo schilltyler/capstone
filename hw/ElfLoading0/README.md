@@ -713,24 +713,6 @@ Upload `submission.zip` containing:
 
 ---
 
-## Grading Breakdown
-
-- **Build Success (10 points):** All programs compile without errors
-- **debug_elf_header (10 points):** Correctly displays ELF header
-- **validate_elf (10 points):** Validates ELF at given address
-- **debug_program_headers (10 points):** Shows program headers correctly
-- **debug_segments (10 points):** Displays memory mapping information
-- **mini_loader (35 points):** Successfully loads and executes programs
-  - `read_file_into_memory`: 10 points
-  - `map_elf`: 20 points
-  - `load_elf_from_path`: 5 points
-- **Code Quality (15 points):** Clean code, proper error handling, comments
-- **Test passes (10 points):** `make test` succeeds
-
-**Total: 100 points**
-
----
-
 ## Resources
 
 ### Official Documentation
