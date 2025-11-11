@@ -1,0 +1,166 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/debug_elf_header.o",
+      "src/debug_elf_header.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/debug_elf_header.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/debug_elf_header.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-c",
+      "-o",
+      "obj/start.o",
+      "src/start.S"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/start.S",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/start.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/utils.o",
+      "src/utils.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/utils.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/elf_utils.o",
+      "src/elf_utils.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/elf_utils.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/elf_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/validate_elf.o",
+      "src/validate_elf.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/validate_elf.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/validate_elf.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/debug_program_headers.o",
+      "src/debug_program_headers.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/debug_program_headers.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/debug_program_headers.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/debug_segments.o",
+      "src/debug_segments.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/debug_segments.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/debug_segments.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/mini_loader.o",
+      "src/mini_loader.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/mini_loader.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/mini_loader.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-std=c11",
+      "-fPIC",
+      "-fno-stack-protector",
+      "-Iinc",
+      "-c",
+      "-o",
+      "obj/sample.o",
+      "src/sample.c"
+    ],
+    "directory": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission",
+    "file": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/src/sample.c",
+    "output": "/home/user/teaching/aarch64-elf-0/ElfLoading0/sample_submission/obj/sample.o"
+  }
+]
