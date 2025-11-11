@@ -1,6 +1,7 @@
 # ELF Loading Assignment - Detailed Guide
 
 ## Table of Contents
+
 1. [Overview](#overview)
 2. [Understanding ELF File Structure](#understanding-elf-file-structure)
 3. [Memory Mapping Concepts](#memory-mapping-concepts)
@@ -52,6 +53,7 @@ graph TD
 ```
 
 **Key Fields:**
+
 - `e_ident[16]`: Magic bytes (0x7F 'E' 'L' 'F'), class (32/64-bit), endianness
 - `e_type`: ET_EXEC (executable), ET_DYN (PIE/shared object)
 - `e_machine`: EM_AARCH64 (183) for ARM64
@@ -79,6 +81,7 @@ graph LR
 ```
 
 **Key Fields for PT_LOAD:**
+
 - `p_type`: PT_LOAD means this segment should be loaded into memory
 - `p_offset`: Where in the file the segment data starts
 - `p_vaddr`: Virtual address where segment should be mapped
@@ -144,6 +147,7 @@ graph LR
 ```
 
 **Alignment Macros:**
+
 ```c
 #define PAGE_SIZE 0x1000
 #define PAGE_ALIGN_DOWN(x) ((x) & ~(PAGE_SIZE - 1))
@@ -169,6 +173,7 @@ sequenceDiagram
 ```
 
 **Load Bias Calculation:**
+
 ```c
 // Find minimum virtual address from all PT_LOAD segments
 uint64_t min_vaddr = 0x10000;  // example
@@ -206,6 +211,7 @@ flowchart TD
 ```
 
 **Implementation Template:**
+
 ```c
 Elf64_Ehdr ehdr;
 int fd = sys_openat(AT_FDCWD, filename, O_RDONLY);
@@ -241,6 +247,7 @@ flowchart TD
 ```
 
 **Implementation Template:**
+
 ```c
 // Seek to program headers
 sys_lseek(fd, ehdr.e_phoff, SEEK_SET);
@@ -275,7 +282,7 @@ flowchart TD
 
     C2 --> D[For each PT_LOAD segment]
     D --> D1[Calculate page-aligned range]
-    D1 --> D2[mprotect to PROT_READ | PROT_WRITE]
+    D1 --> D2[mprotect to PROT_READ  PROT_WRITE]
 
     D2 --> E[Copy segment data from file]
     E --> E1[memcpy p_filesz bytes from file offset]
@@ -310,6 +317,7 @@ sys_mprotect(segment_addr, segment_size, prot);
 ```
 
 **Common Segment Permissions:**
+
 - Code segment (`.text`): `R-X` (PROT_READ | PROT_EXEC)
 - Read-only data (`.rodata`): `R--` (PROT_READ)
 - Data segment (`.data`, `.bss`): `RW-` (PROT_READ | PROT_WRITE)
@@ -327,6 +335,7 @@ flowchart LR
 ```
 
 **Implementation:**
+
 ```c
 uintptr_t entry = map_elf(elf_data, size);  // Returns entry with load_bias applied
 
@@ -348,11 +357,13 @@ entry_func();
 Implement a program that reads an ELF file and displays its header information.
 
 **Usage:**
+
 ```bash
 ./bin/debug_elf_header <elf_file>
 ```
 
 **Requirements:**
+
 - Open and read the ELF file using `sys_openat` and `sys_read`
 - Validate the ELF magic bytes (0x7F, 'E', 'L', 'F')
 - Parse and display:
@@ -374,11 +385,13 @@ Implement a program that reads an ELF file and displays its header information.
 Implement a program that validates an ELF at a given virtual address (useful for debugging loaded programs).
 
 **Usage:**
+
 ```bash
 ./bin/validate_elf <virtual_address>
 ```
 
 **Requirements:**
+
 - Parse the virtual address from command line (hex format: 0x400000)
 - Cast the address to an `Elf64_Ehdr *` pointer
 - Validate:
@@ -396,11 +409,13 @@ Implement a program that validates an ELF at a given virtual address (useful for
 Display all program headers from an ELF file in a formatted table.
 
 **Usage:**
+
 ```bash
 ./bin/debug_program_headers <elf_file>
 ```
 
 **Requirements:**
+
 - Read ELF header to find program headers location (`e_phoff`)
 - Iterate through all program headers (`e_phnum` entries)
 - For each program header, display:
@@ -422,11 +437,13 @@ Display all program headers from an ELF file in a formatted table.
 Analyze PT_LOAD segments and display how they will be mapped into memory.
 
 **Usage:**
+
 ```bash
 ./bin/debug_segments <elf_file>
 ```
 
 **Requirements:**
+
 - Filter program headers for PT_LOAD segments only
 - For each PT_LOAD segment, display:
   - Requested virtual address range
@@ -445,6 +462,7 @@ Analyze PT_LOAD segments and display how they will be mapped into memory.
 Implement a minimal ELF loader that can load and execute static-PIE binaries.
 
 **Usage:**
+
 ```bash
 ./bin/mini_loader <elf_file>
 ```
@@ -454,6 +472,7 @@ Implement a minimal ELF loader that can load and execute static-PIE binaries.
 Read an entire file into memory.
 
 **Requirements:**
+
 - Open file with `sys_openat(AT_FDCWD, path, O_RDONLY)`
 - Get file size with `sys_lseek(fd, 0, SEEK_END)`
 - Allocate memory with `sys_mmap`
@@ -491,6 +510,7 @@ Map ELF segments into memory with correct permissions.
 #### Function 3: `load_elf_from_path()` (5 points)
 
 **Requirements:**
+
 - Call `read_file_into_memory()`
 - Call `map_elf()`
 - Cast entry point to function pointer: `void (*entry_func)(void) = (void (*)(void))entry`
@@ -536,6 +556,7 @@ make test
 This runs your loader on a minimal hello world program that uses direct syscalls.
 
 **Expected output:**
+
 ```
 Running test: mini_loader loading hello_world...
 ==============================================
@@ -571,12 +592,14 @@ readelf -a bin/sample
 ### Issue 1: Segmentation Fault in Loader
 
 **Possible causes:**
+
 - Page alignment not calculated correctly
 - Load bias not applied to all addresses
 - Memory permissions not set (try to execute non-executable memory)
 - Copying data to wrong address
 
 **Debug strategy:**
+
 ```c
 // Add debug prints
 mini_printf("Mapping segment at %p, size %d\n", segment_addr, segment_size);
@@ -587,11 +610,13 @@ mini_printf("Entry point: %p\n", (void*)entry);
 ### Issue 2: mmap Fails
 
 **Possible causes:**
+
 - Size not page-aligned
 - Invalid protection flags
 - Using MAP_FIXED without proper address
 
 **Solution:**
+
 ```c
 // Don't use MAP_FIXED - let OS choose
 void *base = sys_mmap(NULL, total_size, PROT_NONE,
@@ -601,11 +626,13 @@ void *base = sys_mmap(NULL, total_size, PROT_NONE,
 ### Issue 3: Program Doesn't Execute
 
 **Possible causes:**
+
 - Entry point calculation wrong
 - Code segment missing PROT_EXEC
 - Not applying load bias to entry point
 
 **Verification:**
+
 ```c
 // Verify permissions are set
 mini_printf("Setting perms for segment: ");
@@ -618,11 +645,13 @@ mini_printf("\n");
 ### Issue 4: Data Corruption
 
 **Possible causes:**
+
 - Not zero-filling BSS section
 - Copying wrong amount of data
 - Off-by-one errors in size calculations
 
 **Verification:**
+
 ```c
 // Check BSS handling
 if (phdr->p_memsz > phdr->p_filesz) {
@@ -677,6 +706,7 @@ make submission.zip
 ### Upload to Gradescope
 
 Upload `submission.zip` containing:
+
 - `src/` directory with all your source files
 - `inc/` directory with headers
 - `Makefile`
@@ -712,6 +742,7 @@ Upload `submission.zip` containing:
 ### Man Pages
 
 Use these commands on Linux systems:
+
 ```bash
 man elf          # ELF structure reference
 man 2 mmap       # mmap syscall
@@ -744,7 +775,7 @@ readelf -a bin/sample
 
 ---
 
-## Tips for Success
+## Tips
 
 1. **Start Early:** This assignment has multiple parts that build on each other
 2. **Test Incrementally:** Implement and test each problem before moving to the next
@@ -754,5 +785,3 @@ readelf -a bin/sample
 6. **Page Alignment:** Most bugs come from incorrect page alignment calculations
 7. **Load Bias:** Don't forget to apply load bias to ALL addresses for PIE executables
 8. **BSS Zeroing:** Make sure to zero-fill memory when p_memsz > p_filesz
-
-Good luck!
